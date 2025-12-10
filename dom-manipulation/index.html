@@ -3,21 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <title>Dynamic Quote Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #quoteDisplay { margin: 16px 0; font-style: italic; }
+    .row { margin: 12px 0; }
+    input, select, button { padding: 8px; margin-right: 6px; }
+  </style>
 </head>
 <body>
   <h1>Dynamic Quote Generator</h1>
 
-  <div id="quoteDisplay"></div>
+  
+  <div id="quoteDisplay">No quote yet.</div>
 
-  <button id="newQuote">Show New Quote</button>
-
-  <div>
-    <label for="categorySelect">Choose category:</label>
-    <select id="categorySelect"></select>
+  <div class="row">
+    <button id="newQuote">Show New Quote</button>
+    <label>Category:
+      <select id="categorySelect"></select>
+    </label>
   </div>
 
-  <div id="formContainer"></div>
+  <div class="row" id="formContainer"></div>
+
+  <div class="row">
+    <button id="exportJson">Export quotes (JSON)</button>
+    <input type="file" id="importFile" accept=".json">
+  </div>
+
+  <div class="row">
+    <button id="showLastViewed">Show last viewed (session)</button>
+    <button id="clearSession">Clear session</button>
+    <div id="sessionInfo"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>
 </html>
+
