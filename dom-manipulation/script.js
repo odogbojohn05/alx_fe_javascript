@@ -53,10 +53,12 @@ function createAddQuoteForm() {
   var quoteInput = document.createElement("input");
   quoteInput.type = "text";
   quoteInput.placeholder = "Enter your quote";
+  quoteInput.required = true;
 
   var categoryInput = document.createElement("input");
   categoryInput.type = "text";
   categoryInput.placeholder = "Enter category";
+  categoryInput.required = true;
 
   var addBtn = document.createElement("button");
   addBtn.type = "submit";
@@ -66,7 +68,7 @@ function createAddQuoteForm() {
   form.appendChild(categoryInput);
   form.appendChild(addBtn);
 
-  form.onsubmit = function(e) {
+  form.addEventListener("submit", function(e) {
     e.preventDefault();
     var newQuote = {
       text: quoteInput.value,
@@ -77,12 +79,12 @@ function createAddQuoteForm() {
     quoteInput.value = "";
     categoryInput.value = "";
     alert("Quote added!");
-  };
+  });
 
   formContainer.appendChild(form);
 }
 
-newQuoteBtn.onclick = showRandomQuote;
+newQuoteBtn.addEventListener("click", showRandomQuote);
 
 showCategories();
 createAddQuoteForm();
