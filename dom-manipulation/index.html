@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic Quote Generator</title>
+  <title>Dynamic Quote Generator with Filter</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     #quoteDisplay { margin: 16px 0; font-style: italic; }
@@ -17,25 +17,17 @@
 
   <div class="row">
     <button id="newQuote">Show New Quote</button>
-    <label>Category:
-      <select id="categorySelect"></select>
+  </div>\
+  <div class="row">
+    <label>Filter by Category:
+      <select id="categoryFilter">
+        <option value="all">All Categories</option>
+      </select>
     </label>
   </div>
 
   <div class="row" id="formContainer"></div>
 
-  <div class="row">
-    <button id="exportJson">Export Quotes</button>
-    <input type="file" id="importFile" accept=".json">
-  </div>
-
-  <div class="row">
-    <button id="showLastViewed">Show last viewed (session)</button>
-    <button id="clearSession">Clear session</button>
-    <div id="sessionInfo"></div>
-  </div>
-
   <script src="script.js"></script>
 </body>
 </html>
-
