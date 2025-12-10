@@ -33,27 +33,27 @@ function saveQuotes() {
 
 function populateCategories() {
   categoryFilter.innerHTML = "";
+
   var allOpt = document.createElement("option");
   allOpt.value = "all";
   allOpt.textContent = "All Categories";
   categoryFilter.appendChild(allOpt);
 
-  var categories = [];
-  for (var i = 0; i < quotes.length; i++) {
-    var cat = quotes[i].category;
-    if (categories.indexOf(cat) === -1) {
-      categories.push(cat);
-    }
-  }
+  var categories = quotes.map(function(q) {
+    return q.category;
+  });
 
-  for (var j = 0; j < categories.length; j++) {
+  var uniqueCategories = categories.filter(function(cat, index) {
+    return categories.indexOf(cat) === index;
+  });
+
+  uniqueCategories.map(function(cat) {
     var opt = document.createElement("option");
-    opt.value = categories[j];
-    opt.textContent = categories[j];
+    opt.value = cat;
+    opt.textContent = cat;
     categoryFilter.appendChild(opt);
-  }
+  });
 
-  // Restore last filter from localStorage
   var lastFilter = localStorage.getItem(LS_FILTER_KEY);
   if (lastFilter) {
     categoryFilter.value = lastFilter;
@@ -62,13 +62,10 @@ function populateCategories() {
 
 function showRandomQuote() {
   var selectedCategory = categoryFilter.value;
-  var list = [];
 
-  for (var i = 0; i < quotes.length; i++) {
-    if (selectedCategory === "all" || quotes[i].category === selectedCategory) {
-      list.push(quotes[i]);
-    }
-  }
+  var list = quotes.filter(function(q) {
+    return selectedCategory === "all" || q.category === selectedCategory;
+  });
 
   if (list.length > 0) {
     var index = Math.floor(Math.random() * list.length);
@@ -78,9 +75,10 @@ function showRandomQuote() {
     quoteDisplay.textContent = "No quotes available for this category.";
   }
 }
+
 function filterQuotes() {
   var selectedCategory = categoryFilter.value;
-  localStorage.setItem(LS_FILTER_KEY, selectedCategory); 
+  localStorage.setItem(LS_FILTER_KEY, selectedCategory); // remember filter
   showRandomQuote();
 }
 
