@@ -13,6 +13,8 @@ var quoteDisplay = document.getElementById("quoteDisplay");
 var newQuoteBtn = document.getElementById("newQuote");
 var categoryFilter = document.getElementById("categoryFilter");
 var formContainer = document.getElementById("formContainer");
+var syncBtn = document.getElementById("syncQuotes");
+var notification = document.getElementById("notification");
 
 function loadQuotes() {
   var raw = localStorage.getItem(LS_QUOTES_KEY);
@@ -26,23 +28,18 @@ function loadQuotes() {
     quotes = defaultQuotes.slice();
   }
 }
-
 function saveQuotes() {
   localStorage.setItem(LS_QUOTES_KEY, JSON.stringify(quotes));
 }
 
 function populateCategories() {
   categoryFilter.innerHTML = "";
-
   var allOpt = document.createElement("option");
   allOpt.value = "all";
   allOpt.textContent = "All Categories";
   categoryFilter.appendChild(allOpt);
 
-  var categories = quotes.map(function(q) {
-    return q.category;
-  });
-
+  var categories = quotes.map(function(q) { return q.category; });
   var uniqueCategories = categories.filter(function(cat, index) {
     return categories.indexOf(cat) === index;
   });
@@ -62,7 +59,6 @@ function populateCategories() {
 
 function showRandomQuote() {
   var selectedCategory = categoryFilter.value;
-
   var list = quotes.filter(function(q) {
     return selectedCategory === "all" || q.category === selectedCategory;
   });
@@ -78,7 +74,7 @@ function showRandomQuote() {
 
 function filterQuotes() {
   var selectedCategory = categoryFilter.value;
-  localStorage.setItem(LS_FILTER_KEY, selectedCategory); // remember filter
+  localStorage.setItem(LS_FILTER_KEY, selectedCategory);
   showRandomQuote();
 }
 
@@ -117,10 +113,34 @@ function makeAddForm() {
   formContainer.appendChild(form);
 }
 
+function fetchFromServer() {
+  return fetch("https://jsonplaceholder.typicode.com/posts?_limit=5")
+    .then(function(response) { return response.json(); })
+    .then(function(data) {
+      return data.map(function(item) {
+        return { text: item.title, category: "Server" };
+      });
+    });
+}
+
+function syncQuotes() {
+  fetchFromServer().then(function(serverQuotes) {
+    quotes = serverQuotes.concat(quotes);
+    saveQuotes();
+    populateCategories();
+    notification.textContent = "Quotes synced with server. Server data overrides local conflicts.";
+  }).catch(function() {
+    notification.textContent = "Failed to sync with server.";
+  });
+}
+
 newQuoteBtn.addEventListener("click", showRandomQuote);
 categoryFilter.addEventListener("change", filterQuotes);
+syncBtn.addEventListener("click", syncQuotes);
 
 loadQuotes();
 populateCategories();
 makeAddForm();
 showRandomQuote();
+
+setInterval(syncQuotes, 30000);
