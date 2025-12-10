@@ -15,7 +15,7 @@ var categoryFilter = document.getElementById("categoryFilter");
 var formContainer = document.getElementById("formContainer");
 var syncBtn = document.getElementById("syncQuotes");
 var notification = document.getElementById("notification");
- 
+
 function loadQuotes() {
   var raw = localStorage.getItem(LS_QUOTES_KEY);
   if (raw) {
@@ -109,31 +109,53 @@ function makeAddForm() {
     inputText.value = "";
     inputCat.value = "";
     alert("Quote added!");
+
+    postQuoteToServer(newQuote);
   });
 
   formContainer.appendChild(form);
 }
 
 
-function fetchQuotesFromServer() {
-  return fetch("https://jsonplaceholder.typicode.com/posts?_limit=5")
-    .then(function(response) { return response.json(); })
-    .then(function(data) {
-      return data.map(function(item) {
-        return { text: item.title, category: "Server" };
-      });
+async function fetchQuotesFromServer() {
+  try {
+    let response = await fetch("https://jsonplaceholder.typicode.com/posts?_limit=5");
+    let data = await response.json();
+    return data.map(function(item) {
+      return { text: item.title, category: "Server" };
     });
+  } catch (err) {
+    console.error("Error fetching from server:", err);
+    return [];
+  }
 }
 
-function syncQuotes() {
-  fetchQuotesFromServer().then(function(serverQuotes) {
+async function postQuoteToServer(quote) {
+  try {
+    let response = await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(quote)
+    });
+    let data = await response.json();
+    console.log("Posted to server:", data);
+    notification.textContent = "Quote posted to server!";
+  } catch (err) {
+    console.error("Error posting to server:", err);
+    notification.textContent = "Failed to post quote to server.";
+  }
+}
+
+async function syncQuotes() {
+  try {
+    let serverQuotes = await fetchQuotesFromServer();
     quotes = serverQuotes.concat(quotes);
     saveQuotes();
     populateCategories();
     notification.textContent = "Quotes synced with server. Server data overrides local conflicts.";
-  }).catch(function() {
+  } catch (err) {
     notification.textContent = "Failed to sync with server.";
-  });
+  }
 }
 
 newQuoteBtn.addEventListener("click", showRandomQuote);
