@@ -15,7 +15,7 @@ var categoryFilter = document.getElementById("categoryFilter");
 var formContainer = document.getElementById("formContainer");
 var syncBtn = document.getElementById("syncQuotes");
 var notification = document.getElementById("notification");
-
+ 
 function loadQuotes() {
   var raw = localStorage.getItem(LS_QUOTES_KEY);
   if (raw) {
@@ -28,6 +28,7 @@ function loadQuotes() {
     quotes = defaultQuotes.slice();
   }
 }
+
 function saveQuotes() {
   localStorage.setItem(LS_QUOTES_KEY, JSON.stringify(quotes));
 }
@@ -113,7 +114,8 @@ function makeAddForm() {
   formContainer.appendChild(form);
 }
 
-function fetchFromServer() {
+
+function fetchQuotesFromServer() {
   return fetch("https://jsonplaceholder.typicode.com/posts?_limit=5")
     .then(function(response) { return response.json(); })
     .then(function(data) {
@@ -124,7 +126,7 @@ function fetchFromServer() {
 }
 
 function syncQuotes() {
-  fetchFromServer().then(function(serverQuotes) {
+  fetchQuotesFromServer().then(function(serverQuotes) {
     quotes = serverQuotes.concat(quotes);
     saveQuotes();
     populateCategories();
