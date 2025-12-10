@@ -2,12 +2,13 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Dynamic Quote Generator with Filter</title>
+  <title>Dynamic Quote Generator with Sync</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
     #quoteDisplay { margin: 16px 0; font-style: italic; }
     .row { margin: 12px 0; }
     input, select, button { padding: 8px; margin-right: 6px; }
+    #notification { color: red; margin-top: 10px; }
   </style>
 </head>
 <body>
@@ -17,7 +18,9 @@
 
   <div class="row">
     <button id="newQuote">Show New Quote</button>
-  </div>\
+    <button id="syncQuotes">Sync with Server</button>
+  </div>
+
   <div class="row">
     <label>Filter by Category:
       <select id="categoryFilter">
@@ -27,6 +30,8 @@
   </div>
 
   <div class="row" id="formContainer"></div>
+
+  <div id="notification"></div>
 
   <script src="script.js"></script>
 </body>
