@@ -157,6 +157,17 @@ async function syncQuotes() {
     notification.textContent = "Failed to sync with server.";
   }
 }
+async function syncQuotes() {
+  try {
+    let serverQuotes = await fetchQuotesFromServer();
+    quotes = serverQuotes.concat(quotes);
+    saveQuotes();
+    populateCategories();
+    notification.textContent = "Quotes synced with server!";
+  } catch (err) {
+    notification.textContent = "Failed to sync with server.";
+  }
+}
 
 newQuoteBtn.addEventListener("click", showRandomQuote);
 categoryFilter.addEventListener("change", filterQuotes);
@@ -168,3 +179,4 @@ makeAddForm();
 showRandomQuote();
 
 setInterval(syncQuotes, 30000);
+
